@@ -10,7 +10,7 @@
 #include <BlynkSimpleEsp8266.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial SerialSoft(4, 5);
+SoftwareSerial SerialSoft(14, 12);    // RX, TX
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
@@ -18,8 +18,8 @@ char auth[] = BLYNK_AUTH_TOKEN;
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "OFFICE";
-char pass[] = "seipandaan";
+char ssid[] = "RND_Wifi";
+char pass[] = "RND12345";
 
 BlynkTimer timer;
 
@@ -38,18 +38,19 @@ void myTimerEvent()
   // String my_s = "01000200001AMAN";
   String my_s = "";
 
-  Serial.println("DATA");
+  SerialSoft.println("DATA");
   timer_serial = millis();  
   do{
-    if(Serial.available() > 0){
+    if(SerialSoft.available() > 0){
       delay(10);
       break;
     }
   }while((millis() - timer_serial) <= 500);
 
-  while(Serial.available() > 0){
-    byte d = (char) Serial.read();
-    if(d == '\n'){  hasData = true; }
+  uint8_t n = 0;
+  while(SerialSoft.available() > 0){
+    byte d = (char) SerialSoft.read();
+    if(d == '\n'){  has_data = true; }
     else if(d == '\r'){ }
     else{ 
         text[n] = d;
@@ -88,14 +89,19 @@ void myTimerEvent()
     
     Blynk.virtualWrite(V6, stat);
   }
+  else{
+    Serial.println("No Resp");
+  }
 
   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 }
 
 void setup()
 {
+  delay(3000);
+
   // Debug console
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // Talk to Arduino UNO
   SerialSoft.begin(9600);
@@ -103,8 +109,10 @@ void setup()
   // LED Built In Indicator
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Blynk.begin(auth, ssid, pass);
+  // Blynk.begin(auth, ssid, pass);
+  Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
 
+  Serial.println("Start");
   // Setup a function to be called every second
   timer.setInterval(1000L, myTimerEvent);
 }
