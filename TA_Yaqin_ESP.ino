@@ -47,20 +47,22 @@ void myTimerEvent()
     }
   }while((millis() - timer_serial) <= 500);
 
-  uint8_t n = 0;
   while(SerialSoft.available() > 0){
-    byte d = (char) SerialSoft.read();
+    char d = (char) SerialSoft.read();
     if(d == '\n'){  has_data = true; }
     else if(d == '\r'){ }
     else{ 
-        text[n] = d;
-        n++;  
+        my_s += d;
     }
     
     delay(1);
   }
 
   if(has_data){
+    has_data = false;
+
+    Serial.println(my_s);
+    
     String jarak_depan = my_s.substring(0, 4);
     String jarak_belakang = my_s.substring(4, 8);
     String led_r = my_s.substring(8, 9);
