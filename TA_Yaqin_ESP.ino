@@ -35,61 +35,81 @@ char text[SERIAL_LEN];
 
 void myTimerEvent()
 {
-  // String my_s = "01000200001AMAN";
+  // String my_s = "UNO01000200001AMAN";
   String my_s = "";
+
+  do{
+    if(SerialSoft.available() > 0){
+      char d = (char) SerialSoft.read();
+      timer_serial = millis();
+    }
+  }while((millis() - timer_serial) <= 100);
 
   SerialSoft.println("DATA");
   timer_serial = millis();  
   do{
     if(SerialSoft.available() > 0){
-      delay(10);
-      break;
+//      delay(10);
+//      break;
+
+      char d = (char) SerialSoft.read();
+      if(d == '\n'){  
+        has_data = true; 
+        break;
+      }
+      else if(d == '\r'){ }
+      else{ my_s += d;  }
+
+      timer_serial = millis();
     }
   }while((millis() - timer_serial) <= 500);
 
-  while(SerialSoft.available() > 0){
-    char d = (char) SerialSoft.read();
-    if(d == '\n'){  has_data = true; }
-    else if(d == '\r'){ }
-    else{ 
-        my_s += d;
-    }
-    
-    delay(1);
-  }
+//  while(SerialSoft.available() > 0){
+//    char d = (char) SerialSoft.read();
+//    if(d == '\n'){  has_data = true; }
+//    else if(d == '\r'){ }
+//    else{ 
+//        my_s += d;
+//    }
+//    
+//    delay(1);
+//  }
 
   if(has_data){
     has_data = false;
 
+    // "UNO01000200001AMAN"
     Serial.println(my_s);
-    
-    String jarak_depan = my_s.substring(0, 4);
-    String jarak_belakang = my_s.substring(4, 8);
-    String led_r = my_s.substring(8, 9);
-    String led_y = my_s.substring(9, 10);
-    String led_g = my_s.substring(10,11);
-    String stat = my_s.substring(11);
-
-    // Serial.printf("depan %s\r\n", jarak_depan);
-    // Serial.printf("belakang %s\r\n", jarak_belakang);
-    // Serial.printf("R %s, Y %s, G %s\r\n", led_r, led_y, led_g);
-    // Serial.printf("Stat %s\r\n", stat);
-
-    // You can send any value at any time.
-    // Please don't send more that 10 values per second.
-    Blynk.virtualWrite(V1, jarak_depan.toInt());
-    Blynk.virtualWrite(V2, jarak_belakang.toInt());
-    
-    if(led_r.toInt()) { ledR.on(); }
-    else { ledR.off(); }
-
-    if(led_y.toInt()) { ledY.on(); }
-    else { ledY.off(); }
-
-    if(led_g.toInt()) { ledG.on(); }
-    else { ledG.off(); }
-    
-    Blynk.virtualWrite(V6, stat);
+    String head = my_s.substring(0,3);
+    if(head == "UNO"){
+      String jarak_depan = my_s.substring(3, 7);
+      String jarak_belakang = my_s.substring(7, 11);
+      String led_r = my_s.substring(11, 12);
+      String led_y = my_s.substring(12, 13);
+      String led_g = my_s.substring(13,14);
+      String stat = my_s.substring(14);
+  
+      Serial.printf("depan %s\r\n", jarak_depan);
+      Serial.printf("belakang %s\r\n", jarak_belakang);
+      Serial.printf("R %s, Y %s, G %s\r\n", led_r, led_y, led_g);
+      Serial.printf("Stat %s\r\n", stat);
+  
+      // You can send any value at any time.
+      // Please don't send more that 10 values per second.
+      Blynk.virtualWrite(V1, jarak_depan.toInt());
+      Blynk.virtualWrite(V2, jarak_belakang.toInt());
+      
+      if(led_r.toInt()) { ledR.on(); }
+      else { ledR.off(); }
+  
+      if(led_y.toInt()) { ledY.on(); }
+      else { ledY.off(); }
+  
+      if(led_g.toInt()) { ledG.on(); }
+      else { ledG.off(); }
+      
+      Blynk.virtualWrite(V6, stat);   
+    }
   }
   else{
     Serial.println("No Resp");
@@ -116,7 +136,7 @@ void setup()
 
   Serial.println("Start");
   // Setup a function to be called every second
-  timer.setInterval(1000L, myTimerEvent);
+  timer.setInterval(2000L, myTimerEvent);
 }
 
 void loop()
