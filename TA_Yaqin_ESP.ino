@@ -6,8 +6,8 @@
 #define BLYNK_DEVICE_NAME "Yaqin"
 #define BLYNK_AUTH_TOKEN "VQGAQp6knBhPPubx6M9FTZZqWluGFAmv"
 
-#include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266.h>
+#include <ESP8266WiFi.h>                      // Install esp8266 by ESP8266 Community version 2.7.1
+#include <BlynkSimpleEsp8266.h>               // Install Blynk by Volodymyr Shymanskyy version 0.6.1
 #include <SoftwareSerial.h>
 
 SoftwareSerial SerialSoft(14, 12);    // RX, TX
@@ -89,10 +89,10 @@ void myTimerEvent()
       String led_g = my_s.substring(13,14);
       String stat = my_s.substring(14);
   
-      Serial.printf("depan %s\r\n", jarak_depan);
-      Serial.printf("belakang %s\r\n", jarak_belakang);
-      Serial.printf("R %s, Y %s, G %s\r\n", led_r, led_y, led_g);
-      Serial.printf("Stat %s\r\n", stat);
+    //  Serial.printf("depan %s\r\n", jarak_depan);
+    //  Serial.printf("belakang %s\r\n", jarak_belakang);
+    //  Serial.printf("R %s, Y %s, G %s\r\n", led_r, led_y, led_g);
+    //  Serial.printf("Stat %s\r\n", stat);
   
       // You can send any value at any time.
       // Please don't send more that 10 values per second.
@@ -120,7 +120,7 @@ void myTimerEvent()
 
 void setup()
 {
-  delay(3000);
+  delay(1000);
 
   // Debug console
   Serial.begin(115200);
@@ -136,7 +136,7 @@ void setup()
 
   Serial.println("Start");
   // Setup a function to be called every second
-  timer.setInterval(2000L, myTimerEvent);
+  timer.setInterval(10000L, myTimerEvent);
 }
 
 void loop()
