@@ -89,7 +89,7 @@ void loop()
           has_data = false;
 
           // "UNO01000200001AMAN"
-          Serial.println(my_s);
+          // Serial.println(my_s);
           client.publish("samikro/data/project/4", my_s.c_str(),false);
         }
         else{
