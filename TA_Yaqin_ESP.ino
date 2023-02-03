@@ -59,7 +59,7 @@ void loop()
 
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 
-        // String my_s = "UNO01000200001AMAN";
+        // String my_s = "UNO0100020003000400001AMAN";
         String my_s = "";
 
         do{
@@ -88,7 +88,7 @@ void loop()
         if(has_data){
           has_data = false;
 
-          // "UNO01000200001AMAN"
+          // "UNO0100020003000400001AMAN"
           // Serial.println(my_s);
           client.publish("samikro/data/project/4", my_s.c_str(),false);
         }
