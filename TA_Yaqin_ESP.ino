@@ -8,8 +8,8 @@ PubSubClient client(espClient);
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "RND_Wifi";
-char pass[] = "RND12345";
+char ssid[] = "nurulyakin";
+char pass[] = "yakin3008";
 
 #define MQTT_ID         "7912c119-3a3c-4127-ac2e-440aadd221218"
 
